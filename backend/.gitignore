@@ -1,3 +1,6 @@
 *.log
 images/
-face_enc
+.idea/
+test/
+encoding
+shape_predictor_68_face_landmarks.dat

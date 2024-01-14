@@ -18,11 +18,13 @@ def _register_hooks(sanic_app: Sanic):
 
 def create_app(*config_cls) -> Sanic:
     log(
-        message="Sanic application initialized with {}".format(", ".join([config.__name__ for config in config_cls])),
+        message="Sanic application initialized with {}".format(
+            ", ".join([config.__name__ for config in config_cls])
+        ),
         keyword="INFO",
     )
 
-    sanic_app = Sanic(name='my-hello-world-app')
+    sanic_app = Sanic(name="my-hello-world-app")
     for _config in config_cls:
         sanic_app.config.update_config(_config)
 
