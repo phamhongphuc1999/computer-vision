@@ -5,3 +5,4 @@ dataset/
 train-dataset/
 train_detected_faces/
 extracted_embeddings/
+extracted_embeddingstest/
