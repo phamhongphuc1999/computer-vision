@@ -1,6 +1,7 @@
 *.log
-images/
 .idea/
-test/
-encoding
-shape_predictor_68_face_landmarks.dat
+.venv/
+dataset/
+train-dataset/
+train_detected_faces/
+extracted_embeddings/

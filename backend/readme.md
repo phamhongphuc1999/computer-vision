@@ -1,23 +1,30 @@
 <h1 align="center">
-  Computer Vision Backend
+  Computer Vision
 </h1>
 
-## Instruction
+## Run
 
-- Download `shape_predictor_68_face_landmarks`
+#### Create virtual environment
 
 ```shell
-wget http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
-bzip2 -d shape_predictor_68_face_landmarks.dat.bz2
+python3 -m venv ./venv
 ```
 
-- Install package
+#### Install libraries
+
+- install required libraries
 
 ```shell
 pip3 install -r requirements.txt
 ```
 
+- because of some reasons, please installing several libraries manually
+
+```shell
+pip install mtcnn
+pip install facenet-pytorch
+```
+
 ## Reference
 
-- https://github.com/opencv/opencv/tree/master/data/haarcascades
-- https://medium.com/analytics-vidhya/facial-landmarks-detection-with-dlib-and-haar-cascade-e3c8195131d7
+- https://www.kaggle.com/code/alkanerturan/facedetection-recognition/notebook
