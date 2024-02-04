@@ -1,4 +1,5 @@
 *.log
+weights
 .idea/
 .venv/
 dataset/
