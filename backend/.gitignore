@@ -3,8 +3,8 @@ weights
 .idea/
 .venv/
 dataset/
-train-dataset/
-train_detected_faces/
+data1/
+detected_faces/
 extracted_embeddings/
 extracted_embeddingstest/
 __pycache__/

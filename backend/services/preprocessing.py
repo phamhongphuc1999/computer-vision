@@ -29,7 +29,7 @@ class Preprocessing:
         face_detector = MTCNN()
         for i, image_path in enumerate(image_paths):
             img = cv2.imread(image_path)
-            rgb_img, faces = FaceDetection.detect(image_path, face_detector)
+            _, faces = FaceDetection.detect(image_path, face_detector)
             if len(faces):
                 x, y, w, h = faces[0]["box"]
                 face_roi = img[y : y + h, x : x + w]
