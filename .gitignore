@@ -1,1 +1,13 @@
 .Ds_Store
+.idea/
+data1/
+dataset/
+detected_faces/
+extracted_embeddings/
+extracted_embeddingstest/
+images/
+venv/
+.venv/
+__pycache__/
+metadata.json
+weights

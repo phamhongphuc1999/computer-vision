@@ -25,14 +25,14 @@ class Preprocessing:
     @staticmethod
     def detect_and_save(image_paths: List[str], output_directory: str):
         processed_images = []
-        images_without_faces = 0
+        images_without_faces = []
         face_detector = MTCNN()
         for i, image_path in enumerate(image_paths):
             img = cv2.imread(image_path)
             _, faces = FaceDetection.detect(image_path, face_detector)
             if len(faces):
                 x, y, w, h = faces[0]["box"]
-                face_roi = img[y : y + h, x : x + w]
+                face_roi = img[y: y + h, x: x + w]
                 resized_face = cv2.resize(face_roi, (224, 224))
                 folder_name = image_path.split("/")[-2]
                 output_folder = os.path.join(output_directory, folder_name)
@@ -41,11 +41,11 @@ class Preprocessing:
                 cv2.imwrite(output_path, resized_face)
                 processed_images.append(resized_face)
             else:
-                images_without_faces += 1
+                images_without_faces.append(image_path)
 
             if i % 50 == 0:
                 print(f"{i}/{len(image_paths)} images processed", end="\r", flush=True)
         print(
-            f"\nImages without faces detected/Total images: {images_without_faces}/{len(image_paths)}"
+            f"\nImages without faces detected: {images_without_faces}({(len(images_without_faces))}/{len(image_paths)})"
         )
         return np.array(processed_images)

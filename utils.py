@@ -15,7 +15,7 @@ def reset_folder(directory_path: str):
 def count_file_and_folder(folder_path: str):
     folder_count = 0
     total_file_count = 0
-    for root, dirs, files in os.walk(folder_path):
+    for _, dirs, files in os.walk(folder_path):
         folder_count += len(dirs)
         folder_file_count = len(files)
         total_file_count += folder_file_count

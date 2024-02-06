@@ -20,11 +20,18 @@ class FaceEmbedding:
         return embeddings
 
     @staticmethod
+    def image_embedding(image_path: str, face_embedder: InceptionResnetV1, device: str):
+        img = Image.open(image_path)
+        img_tensor = transforms.ToTensor()(img).unsqueeze(0).float().to(device)
+        embedding = face_embedder(img_tensor).squeeze().detach().cpu().numpy()
+        return embedding
+
+    @staticmethod
     def images_embedding(
         folder_path: str,
         face_embedder: InceptionResnetV1,
         device: str,
-        output_directory: str,
+        output_path: str,
     ):
         embeddings = {}
         data_transform = transforms.Compose(
@@ -45,12 +52,11 @@ class FaceEmbedding:
             try:
                 img = Image.open(image_path)
                 img_tensor = transforms.ToTensor()(img).unsqueeze(0).float().to(device)
-
                 embedding = face_embedder(img_tensor).squeeze().detach().cpu().numpy()
                 embeddings[image_name] = embedding
 
                 output_emb_path = os.path.join(
-                    output_directory,
+                    output_path,
                     f"{label}_{os.path.splitext(image_name)[0]}_embedding.npy",
                 )
                 np.save(output_emb_path, embedding)
@@ -65,7 +71,7 @@ class FaceEmbedding:
                     f"{os.path.splitext(image_name)[0]}_augmented_embedding.npy"
                 ] = embedding_augmented
                 output_emb_path_augmented = os.path.join(
-                    output_directory,
+                    output_path,
                     f"{label}_{os.path.splitext(image_name)[0]}_augmented_embedding.npy",
                 )
                 np.save(output_emb_path_augmented, embedding_augmented)

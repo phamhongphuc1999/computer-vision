@@ -15,6 +15,8 @@ if __name__ == "__main__":
     )
     face_embedder = InceptionResnetV1(pretrained="vggface2").eval().to(device)
 
-    rgb_img, faces = FaceDetection.detect("./images/mask-person.jpg", face_detector)
+    rgb_img, faces = FaceDetection.detect(
+        "./dataset/pins_Brie Larson/Brie Larson7_1085.jpg", face_detector
+    )
     FaceDetection.draw(label="Adriana", rgb_img=rgb_img, faces=faces)
     embeddings = FaceEmbedding.embedding(rgb_img, faces, face_embedder)
