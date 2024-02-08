@@ -32,7 +32,7 @@ class Preprocessing:
             _, faces = FaceDetection.detect(image_path, face_detector)
             if len(faces):
                 x, y, w, h = faces[0]["box"]
-                face_roi = img[y: y + h, x: x + w]
+                face_roi = img[y : y + h, x : x + w]
                 resized_face = cv2.resize(face_roi, (224, 224))
                 folder_name = image_path.split("/")[-2]
                 output_folder = os.path.join(output_directory, folder_name)

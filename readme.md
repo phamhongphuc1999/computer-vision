@@ -18,13 +18,6 @@ python3 -m venv ./venv
 pip3 install -r requirements.txt
 ```
 
-- because of some reasons, please installing several libraries manually
-
-```shell
-pip install mtcnn
-pip install facenet-pytorch
-```
-
 ## Reference
 
 - https://www.kaggle.com/code/alkanerturan/facedetection-recognition/notebook
@@ -33,3 +26,5 @@ pip install facenet-pytorch
 
 - `pins_Zendaya/Zendaya24_1868`
 - `Anne Hathaway203_391.jpg`
+
+- https://www.codemag.com/Article/2205081/Implementing-Face-Recognition-Using-Deep-Learning-and-Support-Vector-Machines

@@ -1,11 +1,7 @@
 .Ds_Store
 .idea/
-data1/
 dataset/
-detected_faces/
-extracted_embeddings/
-extracted_embeddingstest/
-images/
+resources/
 venv/
 .venv/
 __pycache__/

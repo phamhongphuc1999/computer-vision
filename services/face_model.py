@@ -1,6 +1,10 @@
+from typing import List
+
+import torch
 import torch.nn as nn
 import os
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
 
 def get_train_data(data_path: str):
@@ -21,6 +25,18 @@ def get_train_data(data_path: str):
             embeddings.append(embeddings_per_label)
     embeddings = [item for sublist in embeddings for item in sublist]
     return embeddings, np.array(labels)
+
+
+def encode_labels(labels: List[str]):
+    full_encoder = LabelEncoder()
+    full_encoded_labels = torch.tensor(
+        full_encoder.fit_transform(labels), dtype=torch.long
+    )
+    result = {}
+    for label in labels:
+        result[label] = True
+    unique_labels = list(result.keys())
+    return full_encoded_labels, unique_labels
 
 
 class FaceModel(nn.Module):
