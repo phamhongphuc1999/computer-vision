@@ -1,10 +1,8 @@
-import os
-from typing import List
-
 import cv2
+import os
 import numpy as np
 from mtcnn import MTCNN
-
+from typing import List
 from services.face_detection import FaceDetection
 
 
@@ -30,9 +28,9 @@ class Preprocessing:
         for i, image_path in enumerate(image_paths):
             img = cv2.imread(image_path)
             _, faces = FaceDetection.detect(image_path, face_detector)
-            if len(faces):
+            if len(faces) > 0:
                 x, y, w, h = faces[0]["box"]
-                face_roi = img[y : y + h, x : x + w]
+                face_roi = img[y: y + h, x: x + w]
                 resized_face = cv2.resize(face_roi, (224, 224))
                 folder_name = image_path.split("/")[-2]
                 output_folder = os.path.join(output_directory, folder_name)

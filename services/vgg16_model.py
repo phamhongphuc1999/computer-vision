@@ -1,17 +1,15 @@
-import keras
+import json
 import numpy as np
+from keras.optimizers import SGD
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, MaxPool2D, Flatten
-from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.src.preprocessing.image import DirectoryIterator, ImageDataGenerator
-
-from utils import count_file_and_folder
 
 BATCH_SIZE = 32
 
 
-def get_vgg16_model(number_classes: int):
+def get_vgg16_model(num_classes: int):
     model = Sequential()
     model.add(
         Conv2D(
@@ -62,59 +60,79 @@ def get_vgg16_model(number_classes: int):
     )
     model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(units=4096, activation="relu"))
-    model.add(Dense(units=4096, activation="relu"))
-    model.add(Dense(units=number_classes, activation="softmax"))
+    model.add(Dense(units=100, activation="relu"))
+    model.add(Dense(units=200, activation="relu"))
+    model.add(Dense(units=num_classes, activation="softmax"))
 
-    opt = Adam(lr=0.001)
-    model.compile(
-        optimizer=opt, loss=keras.losses.categorical_crossentropy, metrics=["accuracy"]
-    )
-    model.summary()
+    opt = SGD(lr=0.01)
+    model.compile(loss="categorical_crossentropy", optimizer=opt)
     return model
 
 
 def get_dataset(train_path: str, test_path: str):
-    trdata = ImageDataGenerator()
+    trdata = ImageDataGenerator(
+        rescale=1.0 / 224, shear_range=0.2, zoom_range=0.2, horizontal_flip=True
+    )
     train_data = trdata.flow_from_directory(
         directory=train_path, target_size=(224, 224)
     )
-    tsdata = ImageDataGenerator()
+    tsdata = ImageDataGenerator(rescale=1.0 / 224)
     test_data = tsdata.flow_from_directory(directory=test_path, target_size=(224, 224))
     return train_data, test_data
+
+
+def save_metadata(train_data: DirectoryIterator, metadata_path: str):
+    num_classes = train_data.num_classes
+    class_indices = train_data.class_indices
+    names = class_indices.keys()
+    labels = {}
+    for name in names:
+        encoded_label = class_indices[name]
+        labels[encoded_label] = name
+    file = open(metadata_path, "w", encoding="utf-8")
+    json.dump(
+        {"num_classes": num_classes, "class_indices": class_indices, "labels": labels},
+        file,
+    )
+    file.close()
+
+
+def load_metadata(metadata_path: str):
+    file = open(metadata_path)
+    data = json.load(file)
+    file.close()
+    return data["num_classes"], data["class_indices"], data["labels"]
 
 
 def execute_model(
     model: Sequential,
     train_data: DirectoryIterator,
-    test_data: DirectoryIterator,
+    val_data: DirectoryIterator,
     epochs: int,
-    period: int,
 ):
-    _, total_train = count_file_and_folder("./resources/mini_faces")
-    _, total_test = count_file_and_folder("./resources/mini_test")
-    train_steps_per_epoch = np.ceil((total_train * 0.8 / BATCH_SIZE) - 1)
-    val_steps_per_epoch = np.ceil((total_test * 0.2 / BATCH_SIZE) - 1)
-    print("train_steps_per_epoch", train_steps_per_epoch)
-    print("val_steps_per_epoch", val_steps_per_epoch)
+    total_train = train_data.n
+    total_val = val_data.n
+
+    steps_per_epoch = np.ceil(total_train / BATCH_SIZE)
+    validation_steps = np.ceil(total_val / BATCH_SIZE)
 
     checkpoint = ModelCheckpoint(
         "vgg16_1.h5",
-        monitor="val_acc",
+        monitor="val_loss",
         verbose=1,
         save_best_only=True,
         save_weights_only=False,
         mode="auto",
-        save_freq=period,
+        save_freq="epoch",
     )
     early = EarlyStopping(
-        monitor="val_acc", min_delta=0, patience=20, verbose=1, mode="auto"
+        monitor="val_loss", min_delta=0, patience=20, verbose=1, mode="auto"
     )
     hist = model.fit_generator(
-        steps_per_epoch=14,
+        steps_per_epoch=steps_per_epoch,
         generator=train_data,
-        validation_data=test_data,
-        validation_steps=1,
+        validation_data=val_data,
+        validation_steps=validation_steps,
         epochs=epochs,
         callbacks=[checkpoint, early],
     )

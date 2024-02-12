@@ -1,7 +1,7 @@
 import cv2
-import matplotlib.pyplot as plt
-from mtcnn import MTCNN
 from PIL import Image
+from mtcnn import MTCNN
+import matplotlib.pyplot as plt
 
 
 class FaceDetection:
