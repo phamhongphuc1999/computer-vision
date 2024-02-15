@@ -6,3 +6,4 @@ mtcnn==0.1.1
 keras==2.15.0
 PyQt6==6.6.1
 pre-commit==3.6.0
+dlib==19.24.2

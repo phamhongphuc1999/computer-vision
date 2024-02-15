@@ -1,9 +1,22 @@
+import json
+from json import JSONEncoder
+
 import cv2
 import os
+
+import face_recognition
 import numpy as np
 from mtcnn import MTCNN
 from typing import List
+
 from services.face_detection import FaceDetection
+
+
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
 
 
 class Preprocessing:
@@ -47,3 +60,24 @@ class Preprocessing:
             f"\nImages without faces detected: {images_without_faces}({(len(images_without_faces))}/{len(image_paths)})"
         )
         return np.array(processed_images)
+
+    @staticmethod
+    def face_encodings(image_paths: List[str], output_directory: str):
+        result = {}
+        for i, image_path in enumerate(image_paths):
+            img = cv2.imread(image_path)
+            rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            encoding = face_recognition.face_encodings(rgb_image, known_face_locations=[(0, 224, 224, 0)])
+            folder_name = image_path.split("/")[-2]
+            name = folder_name
+            if name not in result:
+                result[name] = []
+            result[name].append(encoding[0])
+            print(f"{i}, {image_path}")
+            if i > 500:
+                break
+        for name in result:
+            src_path = os.path.join(output_directory, f'{name}.json')
+            file = open(src_path, 'w', encoding='utf-8')
+            json.dump(result[name], file, cls=NumpyArrayEncoder)
+            file.close()
