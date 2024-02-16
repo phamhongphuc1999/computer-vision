@@ -1,5 +1,19 @@
 import os
 import shutil
+from json import JSONEncoder
+
+import numpy as np
+
+
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
+
+
+def to_fixed(num: float):
+    return float("{:.2f}".format(num))
 
 
 def reset_folder(directory_path: str):

@@ -60,8 +60,8 @@ def get_vgg16_model(num_classes: int):
     )
     model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Flatten())
-    model.add(Dense(units=100, activation="relu"))
-    model.add(Dense(units=200, activation="relu"))
+    model.add(Dense(units=4096, activation="relu"))
+    model.add(Dense(units=4096, activation="relu"))
     model.add(Dense(units=num_classes, activation="softmax"))
 
     opt = SGD(lr=0.01)

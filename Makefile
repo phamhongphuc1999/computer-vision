@@ -12,6 +12,10 @@ TARGET_MAX_CHAR_NUM = 20
 install:
 	pip3 install -r requirements.txt
 
+## Run desktop app. | Run
+run:
+	python3 main_app.py
+
 ## Shows help. | Help
 help:
 	@echo ''
