@@ -1,15 +1,11 @@
-import json
-
 import cv2
 import os
 
-import face_recognition
 import numpy as np
 from mtcnn import MTCNN
 from typing import List
 
 from services.face_detection import FaceDetection
-from utils import NumpyArrayEncoder
 
 
 class Preprocessing:
@@ -33,46 +29,23 @@ class Preprocessing:
         face_detector = MTCNN()
         for i, image_path in enumerate(image_paths):
             img = cv2.imread(image_path)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             _, faces = FaceDetection.detect(image_path, face_detector)
             if len(faces) > 0:
                 x, y, w, h = faces[0]["box"]
                 face_roi = img[y : y + h, x : x + w]
                 resized_face = cv2.resize(face_roi, (224, 224))
                 folder_name = image_path.split("/")[-2]
-                output_folder = os.path.join(output_directory, folder_name)
+                names = folder_name[5:].lower().split(" ")
+                name = "_".join(names)
+                output_folder = os.path.join(output_directory, name)
                 os.makedirs(output_folder, exist_ok=True)
-                output_path = os.path.join(output_folder, f"detected_face_{i}.jpg")
+                output_path = os.path.join(output_folder, f"{name}{i}.jpg")
                 cv2.imwrite(output_path, resized_face)
                 processed_images.append(resized_face)
             else:
                 images_without_faces.append(image_path)
-
-            if i % 50 == 0:
-                print(f"{i}/{len(image_paths)} images processed", end="\r", flush=True)
         print(
             f"\nImages without faces detected: {images_without_faces}({(len(images_without_faces))}/{len(image_paths)})"
         )
         return np.array(processed_images)
-
-    @staticmethod
-    def face_encodings(image_paths: List[str], output_directory: str):
-        result = {}
-        for i, image_path in enumerate(image_paths):
-            img = cv2.imread(image_path)
-            rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-            encoding = face_recognition.face_encodings(
-                rgb_image, known_face_locations=[(0, 224, 224, 0)]
-            )
-            folder_name = image_path.split("/")[-2]
-            name = folder_name
-            if name not in result:
-                result[name] = []
-            result[name].append(encoding[0])
-            print(f"{i}, {image_path}")
-            if i > 500:
-                break
-        for name in result:
-            src_path = os.path.join(output_directory, f"{name}.json")
-            file = open(src_path, "w", encoding="utf-8")
-            json.dump(result[name], file, cls=NumpyArrayEncoder)
-            file.close()

@@ -1,15 +1,5 @@
 import os
 import shutil
-from json import JSONEncoder
-
-import numpy as np
-
-
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
 
 
 def to_fixed(num: float):
@@ -34,3 +24,13 @@ def count_file_and_folder(folder_path: str):
         folder_file_count = len(files)
         total_file_count += folder_file_count
     return folder_count, total_file_count
+
+
+def find_best_solution(output):
+    _max = output[0][0]
+    _index = 0
+    for i, item in enumerate(output[0]):
+        if item > _max:
+            _max = item
+            _index = i
+    return _index, _max
