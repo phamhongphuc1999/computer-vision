@@ -22,6 +22,12 @@ pip3 install -r requirements.txt
 
 #### 4. Create train, validate dataset and begin to train your model
 
+- Create necessary folder
+
+```shell
+mkdir resources
+```
+
 - You must follow all steps in [main.ipynb](main.ipynb)
 - After training, please save your model(under filename vgg16_1.h5) and metadata file(metadata.json) to `resources`.
 

@@ -1,11 +1,11 @@
 import math
 import cv2
+import numpy as np
 from mtcnn import MTCNN
 from keras.models import load_model
-import numpy as np
-from services.face_detection import FaceDetection
-from services.vgg16_model import load_metadata
 from utils import find_best_solution
+from services.vgg16_model import load_metadata
+from services.face_detection import FaceDetection
 
 
 class AppService:
@@ -27,7 +27,7 @@ class AppService:
         predicted_name = self.labels[str(index)]
         return predicted_name, percent
 
-    def analytic(self, path: str, display_width: int):
+    def analytic(self, path: str, display_width: int, show_mark=False):
         _, faces = FaceDetection.detect(path, self._face_detector)
         image = cv2.imread(path)
         face_locations = []
@@ -52,25 +52,28 @@ class AppService:
                 }
             )
             cv2.rectangle(
-                image, (int(x), int(y)), (int(x + w), int(y + h)), (255, 0, 0), 2
+                image, (int(x), int(y)), (int(x + w), int(y + h)), (255, 0, 0), 1
             )
-            left_eye = face["keypoints"]["left_eye"]
-            right_eye = face["keypoints"]["right_eye"]
-            nose = face["keypoints"]["nose"]
-            mouth_left = face["keypoints"]["mouth_left"]
-            mouth_right = face["keypoints"]["mouth_right"]
-            image = cv2.circle(
-                image, left_eye, radius=0, color=(0, 0, 255), thickness=8
-            )
-            image = cv2.circle(
-                image, right_eye, radius=0, color=(0, 0, 255), thickness=8
-            )
-            image = cv2.circle(image, nose, radius=0, color=(0, 0, 255), thickness=8)
-            image = cv2.circle(
-                image, mouth_left, radius=0, color=(0, 0, 255), thickness=8
-            )
-            image = cv2.circle(
-                image, mouth_right, radius=0, color=(0, 0, 255), thickness=8
-            )
+            if show_mark:
+                left_eye = face["keypoints"]["left_eye"]
+                right_eye = face["keypoints"]["right_eye"]
+                nose = face["keypoints"]["nose"]
+                mouth_left = face["keypoints"]["mouth_left"]
+                mouth_right = face["keypoints"]["mouth_right"]
+                image = cv2.circle(
+                    image, left_eye, radius=0, color=(0, 0, 255), thickness=1
+                )
+                image = cv2.circle(
+                    image, right_eye, radius=0, color=(0, 0, 255), thickness=1
+                )
+                image = cv2.circle(
+                    image, nose, radius=0, color=(0, 0, 255), thickness=1
+                )
+                image = cv2.circle(
+                    image, mouth_left, radius=0, color=(0, 0, 255), thickness=1
+                )
+                image = cv2.circle(
+                    image, mouth_right, radius=0, color=(0, 0, 255), thickness=1
+                )
         image = cv2.resize(image, (display_width, new_height))
         return image, face_locations, new_height

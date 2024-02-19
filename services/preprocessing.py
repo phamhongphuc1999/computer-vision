@@ -1,10 +1,8 @@
 import cv2
 import os
-
 import numpy as np
 from mtcnn import MTCNN
 from typing import List
-
 from services.face_detection import FaceDetection
 
 

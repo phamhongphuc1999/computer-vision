@@ -5,5 +5,3 @@ resources/
 venv/
 .venv/
 __pycache__/
-metadata.json
-weights

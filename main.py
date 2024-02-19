@@ -1,3 +1,5 @@
+import json
+
 import cv2
 from PIL import Image
 from keras.preprocessing import image
@@ -5,6 +7,7 @@ import numpy as np
 from keras.models import load_model
 from matplotlib import pyplot as plt
 from mtcnn import MTCNN
+
 from services.face_detection import FaceDetection
 from services.vgg16_model import load_metadata
 from utils import find_best_solution
@@ -12,12 +15,12 @@ from utils import find_best_solution
 
 def vgg16_model():
     img = image.load_img(
-        "resources/test/zoe_saldana/zoe_saldana1.jpg",
+        "resources/gray/val/adriana_lima/adriana_lima1.jpg",
         target_size=(224, 224),
     )
     img = np.asarray(img)
     img = np.expand_dims(img, axis=0)
-    saved_model = load_model("resources/vgg16_1.h5")
+    saved_model = load_model("resources/gray/vgg16_gray.h5")
     output = saved_model.predict(img)
     _index, _max = find_best_solution(output)
     print("_max", output, _max, _index)
@@ -56,4 +59,20 @@ def detection():
 
 
 if __name__ == "__main__":
-    vgg16_model()
+    file = open("resources/test.json")
+    data = json.load(file)
+    file.close()
+    precision_result = data["precision_result"]
+    recall_result = data["recall_result"]
+    counter = 0
+    total = 0
+    for key, value in precision_result.items():
+        counter += 1
+        total += value
+    print(counter, total, total / counter)
+    counter = 0
+    total = 0
+    for key, value in recall_result.items():
+        counter += 1
+        total += value
+    print(counter, total, total / counter)
