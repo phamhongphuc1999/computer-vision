@@ -69,9 +69,7 @@ class Qt6App(QWidget):
                     f"location: x: {to_fixed(x_location)}, y: {to_fixed(y_location)}"
                 )
                 self.size_label.setText(f"size: w: {to_fixed(w)}, h: {to_fixed(h)}")
-                self.name_label.setText(
-                    f"name: {location['predicted_name']}({location['percent']})"
-                )
+                self.name_label.setText(f"name: {location['predicted_name']}")
 
     def _resize_img(self, _path: str, show_mark=False):
         image, face_locations, new_height = self.app_service.analytic(
@@ -101,9 +99,9 @@ class Qt6App(QWidget):
     def _mark_click(self):
         if self._show_mark:
             self._show_mark = False
-            self.mark_btn.setText("Hide")
+            self.mark_btn.setText("Show")
             self._resize_img(self._path, False)
         else:
             self._show_mark = True
-            self.mark_btn.setText("Show")
+            self.mark_btn.setText("Hide")
             self._resize_img(self._path, True)

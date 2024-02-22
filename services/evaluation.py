@@ -1,3 +1,4 @@
+import json
 import os
 
 import numpy as np
@@ -6,6 +7,7 @@ from keras.preprocessing import image
 
 from services.vgg16_model import load_metadata
 from utils import find_best_solution
+import matplotlib.pyplot as plt
 
 
 class ResultStorage:
@@ -61,3 +63,36 @@ class Evaluation:
             precision_result[name] = tp / (tp + fp)
             recall_result[name] = tp / (tp + fn)
         return precision_result, recall_result
+
+    @staticmethod
+    def draw_loss():
+        file = open("resources/loss.json")
+        data = json.load(file)
+        file.close()
+        train_loss = data["loss"]
+        val_loss = data["val_loss"]
+
+        plt.plot(train_loss)
+        plt.plot(val_loss)
+
+        plt.xlabel("Epoch")
+        plt.legend(["Training Loss", "Validate Loss"])
+        plt.show()
+
+    @staticmethod
+    def metrics():
+        file = open("resources/val_test.json")
+        data = json.load(file)
+        file.close()
+        precision_result = data["precision_result"]
+        recall_result = data["recall_result"]
+        counter = 0
+        precision_total = 0
+        recall_total = 0
+        f1_total = 0
+        for key, value in precision_result.items():
+            counter += 1
+            precision_total += value
+            recall_total += recall_result[key]
+            f1_total += (2 * value * recall_result[key]) / (value + recall_result[key])
+        return precision_total / counter, recall_total / counter, f1_total / counter

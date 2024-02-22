@@ -2,7 +2,7 @@ import json
 import numpy as np
 from keras.optimizers import SGD
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, MaxPool2D, Flatten
+from keras.layers import Dense, Conv2D, MaxPool2D, Flatten, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.src.preprocessing.image import DirectoryIterator, ImageDataGenerator
 
@@ -61,11 +61,13 @@ def get_vgg16_model(num_classes: int):
     model.add(MaxPool2D(pool_size=(2, 2), strides=(2, 2)))
     model.add(Flatten())
     model.add(Dense(units=4096, activation="relu"))
+    model.add(Dropout(0.5))
     model.add(Dense(units=4096, activation="relu"))
+    model.add(Dropout(0.5))
     model.add(Dense(units=num_classes, activation="softmax"))
 
     opt = SGD(lr=0.01)
-    model.compile(loss="categorical_crossentropy", optimizer=opt)
+    model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
     return model
 
 
@@ -126,7 +128,7 @@ def execute_model(
         save_freq="epoch",
     )
     early = EarlyStopping(
-        monitor="val_loss", min_delta=0, patience=20, verbose=1, mode="auto"
+        monitor="val_loss", min_delta=0, patience=10, verbose=1, mode="auto"
     )
     hist = model.fit_generator(
         steps_per_epoch=steps_per_epoch,
@@ -136,4 +138,4 @@ def execute_model(
         epochs=epochs,
         callbacks=[checkpoint, early],
     )
-    return hist
+    return hist.history

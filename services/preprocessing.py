@@ -27,7 +27,6 @@ class Preprocessing:
         face_detector = MTCNN()
         for i, image_path in enumerate(image_paths):
             img = cv2.imread(image_path)
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             _, faces = FaceDetection.detect(image_path, face_detector)
             if len(faces) > 0:
                 x, y, w, h = faces[0]["box"]

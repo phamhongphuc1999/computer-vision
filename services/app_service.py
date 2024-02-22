@@ -61,19 +61,19 @@ class AppService:
                 mouth_left = face["keypoints"]["mouth_left"]
                 mouth_right = face["keypoints"]["mouth_right"]
                 image = cv2.circle(
-                    image, left_eye, radius=0, color=(0, 0, 255), thickness=1
+                    image, left_eye, radius=0, color=(0, 0, 255), thickness=3
                 )
                 image = cv2.circle(
-                    image, right_eye, radius=0, color=(0, 0, 255), thickness=1
+                    image, right_eye, radius=0, color=(0, 0, 255), thickness=3
                 )
                 image = cv2.circle(
-                    image, nose, radius=0, color=(0, 0, 255), thickness=1
+                    image, nose, radius=0, color=(0, 0, 255), thickness=3
                 )
                 image = cv2.circle(
-                    image, mouth_left, radius=0, color=(0, 0, 255), thickness=1
+                    image, mouth_left, radius=0, color=(0, 0, 255), thickness=3
                 )
                 image = cv2.circle(
-                    image, mouth_right, radius=0, color=(0, 0, 255), thickness=1
+                    image, mouth_right, radius=0, color=(0, 0, 255), thickness=3
                 )
         image = cv2.resize(image, (display_width, new_height))
         return image, face_locations, new_height
