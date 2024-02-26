@@ -8,7 +8,7 @@ from mtcnn import MTCNN
 
 from services.evaluation import Evaluation
 from services.face_detection import FaceDetection
-from services.vgg16_model import load_metadata
+from models.vgg16_model import load_metadata
 from utils import find_best_solution
 
 

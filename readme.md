@@ -41,3 +41,7 @@ make run
 
 - https://www.kaggle.com/code/alkanerturan/facedetection-recognition/notebook
 - https://towardsdatascience.com/step-by-step-vgg16-implementation-in-keras-for-beginners-a833c686ae6c
+- https://www.evidentlyai.com/classification-metrics/multi-class-metrics
+- https://viso.ai/deep-learning/deep-face-recognition/
+- https://williamkoehrsen.medium.com/facial-recognition-using-googles-convolutional-neural-network-5aa752b4240e
+- https://github.com/yoheikikuta/senet-keras/tree/master

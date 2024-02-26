@@ -4,7 +4,7 @@ import numpy as np
 from mtcnn import MTCNN
 from keras.models import load_model
 from utils import find_best_solution
-from services.vgg16_model import load_metadata
+from models.vgg16_model import load_metadata
 from services.face_detection import FaceDetection
 
 

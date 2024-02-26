@@ -5,7 +5,7 @@ import numpy as np
 from keras.models import load_model
 from keras.preprocessing import image
 
-from services.vgg16_model import load_metadata
+from models.vgg16_model import load_metadata
 from utils import find_best_solution
 import matplotlib.pyplot as plt
 
